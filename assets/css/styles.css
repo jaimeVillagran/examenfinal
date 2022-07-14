@@ -1,0 +1,79 @@
+.bg-fondo {
+  background-image: url(../img/header-principal.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  height: 35rem;
+}
+
+.bg-fondo2 {
+  background-image: url(../img/header-two.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  height: 15rem;
+}
+
+.bg-fondo3 {
+  background-image: url(../img/header-principal.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  height: 35rem;
+}
+.bg-fondo4 {
+  background-image: url(../img/header-pedidos.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  height: 35rem;
+}
+header img {
+  background-size: cover;
+  max-width: 10rem;
+  padding-top: 5rem;
+}
+
+header h1 {
+  font-weight: 52px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/*.bg {
+  background-image: url(../img/fondo_login.jpg);
+  background-position: center center;
+}*/
+#generaPedidos2 {
+  background: #ffe259;
+}
+.textoHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /*height: 325px;*/
+  justify-content: center;
+}
+.textoHeader :is(h1, h3) {
+  color: #ffffff;
+}
+
+.borderPersonalizado {
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  min-height: 185px;
+  max-height: 185px;
+  object-fit: cover;
+}
+.borderPersonalizado2 {
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  min-height: 300px;
+  max-height: 300px;
+  object-fit: cover;
+}
+#borderPersonalizado {
+  border-radius: 10px;
+}

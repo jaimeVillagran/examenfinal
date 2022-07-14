@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pedidos</title>
+
+        <!--CSS de Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+      <nav class="bg-fondo3">
+        <div class="container py-4 d-flex align-items-center justify-content-between">
+          <a class="navbar-brand logo" href="#"><img src="assets/img/logo.png" class="img-fluid" alt="logo"
+              width="100" /></a>
+          <button type="button" class="btn btn-outline-warning">Usuarios</button>
+        </div>
+        <div class="textoHeader">
+          <h1>Restaurante El Gourmet</h1>
+          <h3>Pedidos</h3>
+        </div>
+      </nav>
+    
+      <!--Cargada pedidos-->
+      <div id="pedidosRealizados" class="container-fluid work py-5">
+        <p class="display-4 front-weight-bold text-center text-secondary">
+          Pedidos Realizados
+        </p>
+        <div class="container pt-4">
+          <div class="row gap-4 justify-content-center" id="pedidos"></div>
+        </div>
+      </div>
+
+      <div id="generaPedidos" class="container-fluid work py-5">
+        <div id="generaPedidos2" class="container pt-4 rounded shadow">
+          <p class="display-4 front-weight-bold text-center text-secondary">Nueva Orden</p>
+                    
+          <div class="row row-cols-1 row-cols-md-2 g-4" id="formularioPedidos">
+            
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+              <option selected>Mesas disponibles</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
+            
+            
+            <form class="row g-3">             
+                <div class="col-md-6">
+                <label for="inputProductos" class="form-label">Selección Productos</label>
+                <select id="inputProductos" class="form-select">
+                  <option selected>Seleccion</option>
+                  <option>...</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="inputCantidad" class="form-label">Cantidad</label>
+                <input type="text" class="form-control" id="inputCantidad">
+              </div>
+
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary">Nuevo producto</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+        <script type="module" src="assets/js/getPedido.js"></script>
+      
+</body>
+</html>

@@ -1,0 +1,73 @@
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>login</title>
+
+    <!--CSS de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+</head>
+
+<body>
+    <!--navbar -->
+    <nav class="bg-fondo2">
+        <div class="container py-4 d-flex align-items-center justify-content-between">
+            <a class="navbar-brand logo" href="#"><img src="assets/img/logo.png" class="img-fluid" alt="logo"
+                    width="100" /></a>
+        </div>
+        <div class="textoHeader">
+            <h1>Restaurante El Gourmet</h1>
+            <h3>Iniciar sesión</h3>
+        </div>
+    </nav>
+
+    <div class="error" id="error"></div>
+    <!--login -->
+    <div class="container w-75 bg-primary my-5 rounded shadow">
+        <div class="row align-items-lg-stretch">
+            <!--<div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded">-->
+
+        </div>
+        <div class="col bg-white p-5 rounded-end">
+            <div class="text-end">
+                <img src="./assets/img/logo.png" width="100" alt="">
+            </div>
+            <h2 class="fw-bold text-center py-5">Bienvenido</h2>
+
+            <form action="#">
+                <div class="mb-4">
+                    <label for="user" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" name="user" id="user">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" id="password">
+                </div>
+                <!--<div class="mb-4">
+                        <input type="checkbox" name="connected" class="form-check-input">
+                        <label for="connected" class="form-check-label">Manetener Conectado</label>
+                    </div>-->
+                <div class="d-grid">
+                    <button type="button" class="btn btn-primary" id="btn_login">iniciar sesión</button>
+                </div>
+
+                <!--<div class="my-3">
+                            <span>No tienes cuenta?</span> <a href="#">Registrate</a> <br>
+                            <span><a href="#">Recupera tu Password</a></span>
+                        </div>-->
+            </form>
+        </div>
+    </div>
+    </div>
+
+
+
+    <script type="module" src="./assets/js/login.js"></script>
+</body>
+
+</html>
