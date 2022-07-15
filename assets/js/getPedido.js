@@ -219,42 +219,41 @@ const cargaOrdenes = async (datosOrdenes, datosUsers, datosMenus) => {
 };
 const cargaMenuOrdenes = async (datosOrdenes) => {
   let agregadosHtml = "";
+  let agregadosHtml2 = "";
   listOrders.forEach((ordenes) => {
     let pedidos = ordenes.orden;
     agregadosHtml += `
               <div class="card col-3 p-0" id="borderPersonalizado">
-                <img src=${
-                  ordenes.img
-                } class="img-fluid borderPersonalizado" alt="imagen producto">
+                <img src=${ordenes.img} class="img-fluid borderPersonalizado" alt="imagen producto">
                 <div class="card-body">
                   <div class="d-flex align-items-center justify-content-between">
                     <h5 class="card-title m-0">${ordenes.mesero}</h5>
                     <p class="m-0">Id: ${ordenes.mesa}</p>
                     <p class="m-0">Id: ${ordenes.idMesa}</p>
                   </div>
-                  <p class="card-text m-0"><small class="text-muted">$ ${
-                    ordenes.horaOrden
-                  }</small></p>
+                  <p class="card-text m-0"><small class="text-muted">$ ${ordenes.horaOrden}</small></p>
                   <p class="card-text"><small class="text-muted">""PENDIETE PRODUCTOS""</small></p>
                 </div>
-              </div>
-              ${pedidos.forEach((values) => {
-                console.log(values);
-                `<div class='row'>
+              </div>`;
+
+    pedidos.forEach((values) => {
+      agregadosHtml2 += `<div class='row'>
                   <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
-                      <h5 class="card-title m-0">${values.nombre}</h5>
-                      <p class="m-0">Id: ${ordenes.mesa}</p>
-                      <p class="m-0">Id: ${ordenes.idMesa}</p>
+                    <img src=${values.imagen} class="img-fluid borderPersonalizado" alt="imagen producto">
+                      <h5 class="card-title m-0">${values.cantidad}</h5>
+                      <p class="m-0">Id: ${values.nombre}</p>
+                      <p class="m-0">Id: ${values.pedido}</p>
+                      <p class="m-0">Id: ${values.precio}</p>
                     </div>
-                    <p class="card-text m-0"><small class="text-muted">$ ${ordenes.horaOrden}</small></p>
-                    <p class="card-text"><small class="text-muted">""PENDIETE PRODUCTOS""</small></p>
-                </div>
+                    
+                  </div>
                 </div>`;
-              })}
-              `;
+    });
   });
+
   document.getElementById("pedidos").innerHTML = agregadosHtml;
+  document.getElementById("pedidos2").innerHTML = agregadosHtml2;
 };
 /*
 if (key == "0"){
