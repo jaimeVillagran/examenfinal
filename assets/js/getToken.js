@@ -1,5 +1,12 @@
 import { obtenUser } from "./getUser.js";
 let contador = 0;
+let loginLock = localStorage.getItem("loginLock");
+if (loginLock !== null) {
+  document.querySelector(".btn-primary").style.visibility = "hidden";
+} else {
+  document.querySelector(".btn-primary").style.visibility = "visible";
+}
+unlockLogin();
 const obtenToken = async (user, pass) => {
   let myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
@@ -32,15 +39,19 @@ const obtenToken = async (user, pass) => {
       let token = resulTipo + " " + resulToken;
       localStorage.setItem("Token", token);
       console.log("con local", token);
-      rutas(user, pass);
+      window.location = "pedido.html";
     } else if (datosToken.status === 401) {
       console.log("CONTRASEÑA O USUARIO INCORRECTOS");
       contador += 1;
-      console.log(contador)
-      if (contador == 3){
-        let test = document.querySelector(".btn-primary").style.visibility = "hidden"; 
-        alert("supero los 3 intentos")
-        console.log(test)
+      console.log(contador);
+      if (contador == 3) {
+        let test = (document.querySelector(".btn-primary").style.visibility =
+          "hidden");
+        let attempsFailed = new Date();
+        localStorage.setItem("loginLock", attempsFailed);
+        setInterval(unlockLogin, 60000);
+        alert("supero los 3 intentos");
+        console.log(test);
       }
     } else if (datosToken.status === 404) {
       console.log("no se pudo CONECTAR AL SERVIDOR");
@@ -51,39 +62,20 @@ const obtenToken = async (user, pass) => {
     console.log(error);
   }
 };
-
-
-function rutas(user, pass){
-  if (user == "madonna" && pass == "mad0nna" ) {
-      console.log("CORRECTO ES ADMIN");
-      window.location = "pedido.html"  
-    } else if (user == "dualipa" && pass == "du4321") {
-      console.log("CORRECTO ES USER");
-      window.location = "pedido.html"
-    } else if (user == "britney" && pass == "britNEY") {
-      console.log("ES OTRO USER");
-      window.location = "pedido.html"  
-    } else {
-      console.log("user o password incorrectos");
-    } 
+function unlockLogin() {
+  let loginLock = localStorage.getItem("loginLock");
+  let loginDate = new Date();
+  let loginDateAux = new Date(loginDate.getTime());
+  let loginLockAux = new Date(Date.parse(loginLock));
+  let diff = loginDateAux - loginLockAux;
+  let fecha = Math.round(diff / 1000 / 60);
+  if (fecha > 1) {
+    //fecha > 15 para correr 15 min actualmente se dmora 1 min
+    clearInterval();
+    contador = 0;
+    localStorage.removeItem("loginLock");
+    document.querySelector(".btn-primary").style.visibility = "visible";
+    window.location.reload();
   }
-
-
-
-
+}
 export { obtenToken };
-
-/*
-
-fetch("https://maf2qxs1f6.execute-api.us-east-1.amazonaws.com/prod/oauth/token", requestOptions)
-.then(response => response.json())
-.then((data) => {
-    let resulToken = data.access_token;
-    let resulTipo = data.token_type;
-    let token = resulTipo  + " " + resulToken ;     
-    localStorage.setItem("Token", token);
-    console.log("con local",token);
-    
-})
-.catch(error => console.log('error', error));
-*/

@@ -1,7 +1,6 @@
 //import {menus} from "./index.js";
 const botonUsuarios = document.querySelector(".btn-outline-warning");
-
-
+let listOrders = [];
 const cargaOrden = async () => {
   let localToken = localStorage.getItem("Token");
   console.log("localstore", localToken);
@@ -13,6 +12,7 @@ const cargaOrden = async () => {
     headers: myHeaders,
     redirect: "follow",
   };
+
   try {
     const datosOrden = await fetch(
       "https://maf2qxs1f6.execute-api.us-east-1.amazonaws.com/prod/api/orders",
@@ -25,7 +25,6 @@ const cargaOrden = async () => {
     const datosMenu = await fetch(
       "https://maf2qxs1f6.execute-api.us-east-1.amazonaws.com/prod/api/menus"
     );
-
     if (
       datosOrden.status === 200 ||
       datosMenu.status === 200 ||
@@ -34,11 +33,45 @@ const cargaOrden = async () => {
       const datosOrdenes = await datosOrden.json();
       const datosUsers = await datosUser.json();
       const datosMenus = await datosMenu.json();
-
-      //console.log("datos orden", datosOrdenes);
-      //console.log("datos user", datosUsers);
-      //console.log("datos menu", datosMenus);
-
+      const datoNewMen = Object.values(datosMenus);
+      datosOrdenes.forEach((values) => {
+        const arrayOrders = values.order;
+        const filteredList = [];
+        arrayOrders.forEach((elements) => {
+          datoNewMen.forEach((element, key) => {
+            let arrayPlatos = element;
+            arrayPlatos.forEach((result) => {
+              if (elements.product === result.id) {
+                const pedidoObject = {
+                  cantidad: elements.quantity,
+                  pedido: elements.product,
+                  nombre: result.name,
+                  imagen: result.img,
+                  precio: result.price,
+                };
+                filteredList.push(pedidoObject);
+              }
+            });
+          });
+        });
+        let fechaOrden = new Date(values.created_at);
+        let ordersObject = {
+          horaOrden: fechaOrden.toLocaleTimeString(),
+          idMesa: values.id,
+          mesa: values.table,
+          mesero: values.waiter,
+          orden: filteredList,
+        };
+        if (!datosUsers.error) {
+          datosUsers.forEach((result) => {
+            if (ordersObject.mesero === result.id) {
+              ordersObject.img = result.img;
+              ordersObject.name = result.name;
+            }
+          });
+        }
+        listOrders.push(ordersObject);
+      });
       cargaOrdenes(datosOrdenes, datosUsers, datosMenus);
       cargaMenuOrdenes(datosOrdenes);
     } else if (
@@ -61,19 +94,18 @@ const cargaOrden = async () => {
   }
 };
 cargaOrden();
-
 botonUsuarios.addEventListener("click", (event) => {
   event.preventDefault();
-  window.location = "user.html"
-
+  window.location = "user.html";
 });
-
 function userValida() {
   let localToken = localStorage.getItem("Token");
-  let tokenUserDua = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJuYW1lIjoiRHVhIExpcGEiLCJ1c2VyIjoiZHVhbGlwYSIsInJvbGVzIjpbInVzZXIiXX0.YHyn2fvHFWdZyla8jZR1oeJpYqtC4PbOMBE3M_XTLlk'
-  let tokenUserBri = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJuYW1lIjoiQnJpdG5leSBTcGVhcnMiLCJ1c2VyIjoiYnJpdG5leSIsInJvbGVzIjpbInVzZXIiXX0.NokyeF1PKx7xw13Ag7CeGa9VtQLgOnZo0V-U_Cr1A4M'
-  let tokenAdmin = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYW1lIjoiTWFkb25uYSIsInVzZXIiOiJtYWRvbm5hIiwicm9sZXMiOlsiYWRtaW4iXX0.5l4DWWWWhxarAzv9NIiUfoFYiSe6QpmjT2B1SkQjpV4'
-
+  let tokenUserDua =
+    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJuYW1lIjoiRHVhIExpcGEiLCJ1c2VyIjoiZHVhbGlwYSIsInJvbGVzIjpbInVzZXIiXX0.YHyn2fvHFWdZyla8jZR1oeJpYqtC4PbOMBE3M_XTLlk";
+  let tokenUserBri =
+    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJuYW1lIjoiQnJpdG5leSBTcGVhcnMiLCJ1c2VyIjoiYnJpdG5leSIsInJvbGVzIjpbInVzZXIiXX0.NokyeF1PKx7xw13Ag7CeGa9VtQLgOnZo0V-U_Cr1A4M";
+  let tokenAdmin =
+    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYW1lIjoiTWFkb25uYSIsInVzZXIiOiJtYWRvbm5hIiwicm9sZXMiOlsiYWRtaW4iXX0.5l4DWWWWhxarAzv9NIiUfoFYiSe6QpmjT2B1SkQjpV4";
   if (localToken == tokenAdmin) {
     botonUsuarios.style.visibility = "visible";
   } else if (localToken == tokenUserBri) {
@@ -82,34 +114,24 @@ function userValida() {
     botonUsuarios.style.visibility = "hidden";
   }
 }
-
 userValida();
 /*
-
 --------------------------------------------------
 var objOrden[];
-
 orden.id
-
 order.fecha
-
 si orden.idmozo = user.id
   objOrden = user.name
-
 orden.create
-
 si orden.product = menu.id
   objOrden = prodcto.name
   objOrden = producto.img
-
 ----filter
 */
-
 const cargaOrdenes = async (datosOrdenes, datosUsers, datosMenus) => {
   //--- OBTEN ORDENES
   let obtOrdenes = [];
   let obtOrdenes2 = [];
-
   Object.keys(datosOrdenes).map((key) => {
     //console.log(key);
     const valueOrdenes = datosOrdenes[key];
@@ -119,14 +141,10 @@ const cargaOrdenes = async (datosOrdenes, datosUsers, datosMenus) => {
     obtOrdenes.push(valueOrdenes.id);
     obtOrdenes.push(valueOrdenes.waiter);
     obtOrdenes.push(valueOrdenes.created_at);
-
     let valueOrdenes2 = valueOrdenes;
-
     Object.keys(valueOrdenes2).map((key) => {
       const valueOrdenes3 = valueOrdenes2[key];
-
       let valueOrdenes4 = valueOrdenes3;
-
       Object.keys(valueOrdenes4).map((key) => {
         //console.log("key",key);
         const valueOrdenes5 = valueOrdenes4[key];
@@ -138,7 +156,6 @@ const cargaOrdenes = async (datosOrdenes, datosUsers, datosMenus) => {
   });
   console.log("obtOrden66666", obtOrdenes);
   console.log("obtOrden777777777777777777777", obtOrdenes2);
-
   //--OBTEN ORDEN KEY VALUE----
   var objOrden = [];
   for (const [key, value] of Object.entries(datosOrdenes)) {
@@ -152,9 +169,7 @@ const cargaOrdenes = async (datosOrdenes, datosUsers, datosMenus) => {
     }
   }
   console.log("testss", objOrden);
-
   //--OBTEN USER-- KEY VALUE
-
   for (const [key, value] of Object.entries(datosUsers)) {
     //console.log("validar mejor",key, value);
     let test888 = value;
@@ -164,9 +179,7 @@ const cargaOrdenes = async (datosOrdenes, datosUsers, datosMenus) => {
       //console.log("validar mejor KEY",typeof key);
     }
   }
-
   //--- OBTEN USUARIOS ---
-
   let obtOrden = [];
   datosOrdenes.forEach(function (datosOrdene) {
     obtOrden.push(datosOrdene.id);
@@ -174,9 +187,7 @@ const cargaOrdenes = async (datosOrdenes, datosUsers, datosMenus) => {
     obtOrden.push(datosOrdene.created_at);
   });
   console.log("testOrden777", obtOrden);
-
   //-------------------------------------
-
   //---------USER----------------------------------------------
   let obtUser = [];
   Object.keys(datosUsers).map((key) => {
@@ -189,7 +200,6 @@ const cargaOrdenes = async (datosOrdenes, datosUsers, datosMenus) => {
     //console.log("testUserAntigua", value11.name);
   });
   console.log("VARIABLEUSER", obtUser);
-
   //--- OBTEN MENU
   let obtMenu = [];
   Object.keys(datosMenus).map((key) => {
@@ -203,42 +213,55 @@ const cargaOrdenes = async (datosOrdenes, datosUsers, datosMenus) => {
     });
   });
   console.log("VARIABLEMENU", obtMenu);
-
   //obtOrdenes
   //obtUser
   //obtMenu
 };
-
 const cargaMenuOrdenes = async (datosOrdenes) => {
   let agregadosHtml = "";
-  datosOrdenes.forEach((ordenes) => {
+  listOrders.forEach((ordenes) => {
+    let pedidos = ordenes.orden;
     agregadosHtml += `
               <div class="card col-3 p-0" id="borderPersonalizado">
-                <img src=${ordenes.img} class="img-fluid borderPersonalizado" alt="imagen producto">
+                <img src=${
+                  ordenes.img
+                } class="img-fluid borderPersonalizado" alt="imagen producto">
                 <div class="card-body">
                   <div class="d-flex align-items-center justify-content-between">
-                    <h5 class="card-title m-0">${ordenes.waiter}</h5>
-                    <p class="m-0">Id: ${ordenes.id}</p>
+                    <h5 class="card-title m-0">${ordenes.mesero}</h5>
+                    <p class="m-0">Id: ${ordenes.mesa}</p>
+                    <p class="m-0">Id: ${ordenes.idMesa}</p>
                   </div>
-                  <p class="card-text m-0"><small class="text-muted">$ ${ordenes.created_at}</small></p>
+                  <p class="card-text m-0"><small class="text-muted">$ ${
+                    ordenes.horaOrden
+                  }</small></p>
                   <p class="card-text"><small class="text-muted">""PENDIETE PRODUCTOS""</small></p>
                 </div>
               </div>
-            `;
+              ${pedidos.forEach((values) => {
+                console.log(values);
+                `<div class='row'>
+                  <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <h5 class="card-title m-0">${values.nombre}</h5>
+                      <p class="m-0">Id: ${ordenes.mesa}</p>
+                      <p class="m-0">Id: ${ordenes.idMesa}</p>
+                    </div>
+                    <p class="card-text m-0"><small class="text-muted">$ ${ordenes.horaOrden}</small></p>
+                    <p class="card-text"><small class="text-muted">""PENDIETE PRODUCTOS""</small></p>
+                </div>
+                </div>`;
+              })}
+              `;
   });
   document.getElementById("pedidos").innerHTML = agregadosHtml;
 };
-
-
-
-
 /*
 if (key == "0"){
   console.log("CORRECTOOOOOOOOOOOOO",value.name)
 }else{
   console.log("error")
 }
-
  let obtOrdenes1 = Object.keys(datosOrdenes).map(key => {
     //console.log(key);
     const value2 = datosOrdenes[key]
@@ -246,19 +269,15 @@ if (key == "0"){
     console.log("mozo_orden", value2.waiter);
     console.log("crea_orden", value2.created_at);
     let value3 = value2;
-
     let obtOrdenes2 = Object.keys(value3).map(key => {
       //console.log("key",key);
       const value4 = value3[key]
       //console.log("valueResult",value4.id);
-
       let value5 = value4;
-
       let obtOrdenes3 = Object.keys(value5).map(key => {
         //console.log("key",key);
         const value6 = value5[key]
         console.log("OrdenPorductosId", value6.product);
-
       });
     });
   });
@@ -271,9 +290,6 @@ if (key == "0"){
     console.log("testUser", value11.name);
   
   } );
-
-
-
 let test3 = Object.keys(datosMenus).map(key => {
     //console.log(key);
     const value1 = datosMenus[key]
@@ -287,9 +303,6 @@ let test3 = Object.keys(datosMenus).map(key => {
        
     });
   });
-
-
-
 agregadosHtml += `    
                  <div class="card mb-3" style="max-width: 540px;">
                  <div class="row g-0">
@@ -308,9 +321,6 @@ agregadosHtml += `
                </div>
              `;
       
-
-
-
 //id
 //fecha creacion
 //img
@@ -318,7 +328,6 @@ agregadosHtml += `
 //persona tomo el pedido
  
  
-
 Se mostrará un listado de los pedidos, con la imagen y nombre de la persona que tomó el pedido, 
 además de la fecha de creación de este y su ID.
  
